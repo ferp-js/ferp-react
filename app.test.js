@@ -21,6 +21,7 @@ const waitToFind = (renderer, ComponentClass, attempts = 100) => new Promise((re
       renderer.update();
       resolve(waitToFind(renderer, ComponentClass, attempts - 1));
     } catch (err) {
+      console.log('waitToFind failed', err);
       reject(err);
     }
   }, 1);
@@ -33,7 +34,7 @@ test('passes state and dispatch', async (t) => {
   };
 
   const MyComponent = ({ state, dispatch }) => {
-    return createElement('div');
+    return null;
   };
   MyComponent.displayName = 'MyComponent';
 
@@ -69,5 +70,72 @@ test('passes state and dispatch', async (t) => {
   t.is(typeof myComponent.props.dispatch, 'function');
 });
 
-// test('can dispatch a new effect', (t) => {
-// });
+test.cb('can dispatch a new effect', (t) => {
+  t.plan(2);
+
+  const initialState = {
+    foo: 'bar',
+    baz: 'Hello, world!',
+  };
+
+  const fooExpectations = ['bar', 'baz'];
+
+  const MyComponent = ({ state, dispatch }) => {
+    const expected = fooExpectations.shift();
+    t.is(state.foo, expected);
+    if (fooExpectations.length === 0) {
+      t.end();
+    }
+    return null;
+  };
+  MyComponent.displayName = 'MyComponent';
+
+  const MyConnectedComponent = FerpReact.connect(MyComponent);
+
+  /*
+   * In JSX:
+   *
+   * <FerpReact.AppProvider
+   *  init={[initialState, effects.none()]}
+   *  update={(message, state) => {
+   *    switch (message.type) {
+   *      case 'SET_FOO':
+   *        return [{ ...state, foo: message.foo }, effects.none()];
+   *
+   *      default:
+   *        return [state, effects.none()]
+   *    }
+   *  }
+   * >
+   *   <MyComponent />
+   * </FerpReact.AppProvider>
+   */
+
+  const renderer = TestRenderer.create(
+    createElement(
+      FerpReact.AppProvider,
+      {
+        init: [
+          initialState,
+          effects.delay({ type: 'SET_FOO', foo: 'baz' }, 10),
+        ],
+        update: (message, state) => {
+          switch (message.type) {
+            case 'SET_FOO':
+              return [
+                Object.assign({}, state, { foo: message.foo }),
+                effects.none(),
+              ];
+
+            default:
+              return [
+                state,
+                effects.none(),
+              ]
+          }
+        },
+      },
+      createElement(MyConnectedComponent),
+    ),
+  );
+});
