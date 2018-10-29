@@ -19,9 +19,11 @@ npm install --save ferp @ferp/react
 Or grab it from unpkg
 
 ```
+<script src="https://unpkg.com/ferp"></script>
 <script src="https://unpkg.com/@ferp/react"></script>
 <script>
-  const { ferp } = window;
+  const { ferp, ferpReact } = window;
+  const { AppProvider, connect } = ferpReact;
 </script>
 ```
 
@@ -33,7 +35,7 @@ Here's an app that infinitely adds a counter, and logs it.
 import React from 'react';
 import { effects } from 'ferp';
 
-import { connect } from '../index.js';
+import { connect } from '@ferp/react';
 
 const Counter = connect(({ state, dispatch }) => (
   <div className="counter">
