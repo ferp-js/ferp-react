@@ -34,8 +34,7 @@ Here's an app that infinitely adds a counter, and logs it.
 ```javascript
 import React from 'react';
 import { effects } from 'ferp';
-
-import { connect } from '@ferp/react';
+import { AppProvider, connect } from '@ferp/react';
 
 const Counter = connect(({ state, dispatch }) => (
   <div className="counter">
