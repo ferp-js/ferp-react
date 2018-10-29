@@ -1,11 +1,14 @@
 {
   "name": "@ferp/react",
   "version": "0.0.1-beta",
+  "author": "Alex Barry",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
     "test": "ava",
-    "demo": "parcel ./examples/index.html"
+    "demo": "yarn build && parcel ./examples/index.html",
+    "build": "rollup -c",
+    "prepublishOnly": "yarn build"
   },
   "peerDependencies": {
     "ferp": "^1.0.0",
@@ -17,7 +20,10 @@
     "parcel": "^1.10.3",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
-    "react-test-renderer": "^16.6.0"
+    "react-test-renderer": "^16.6.0",
+    "rollup": "^0.66.6",
+    "rollup-plugin-babel-minify": "^6.1.1",
+    "sass": "^1.14.3"
   },
   "ava": {
     "verbose": true
