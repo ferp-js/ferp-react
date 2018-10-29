@@ -1,18 +1,19 @@
 import React from 'react';
-import { render } from 'react-dom';
 import { effects } from 'ferp';
 
 import { connect } from '../index.js';
 
 export const Component = connect(({ state, dispatch }) => (
-  <div>
-    {state.count}
-    <button onClick={() => dispatch({ type: 'INCREMENT' })}>
-      Increment
-    </button>
-    <button onClick={() => dispatch({ type: 'DECREMENT' })}>
-      Decrement
-    </button>
+  <div className="counter">
+    <section className="counter-container">
+      <span className="counter-number">{state.count}</span>
+      <button className="counter-button" onClick={() => dispatch({ type: 'INCREMENT' })}>
+        +
+      </button>
+      <button className="counter-button" onClick={() => dispatch({ type: 'DECREMENT' })}>
+        -
+      </button>
+    </section>
   </div>
 ));
 
